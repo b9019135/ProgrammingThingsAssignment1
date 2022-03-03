@@ -183,9 +183,6 @@ void commands(int control)
         automatic();
       }while(control != 's' || walldetected);
     }
-
-    
-
 }
 
 
@@ -200,6 +197,7 @@ int control;
 }
 
  
+
 
 
  
