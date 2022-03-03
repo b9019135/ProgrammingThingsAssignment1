@@ -66,7 +66,7 @@ void automatic() //Includes operations which allow the zumo robot to run autonom
   {
     // buzzer.playNote(NOTE_A(4), 2000, 10);
     reverse(); //Upon touching a left wall the robot will reverse.
-    delay(300);
+    delay(200);
     automaticright(); //After reversing the robot will turn right.
     delay(300);
     automaticforward(); //It will then continue to move foward.
@@ -75,7 +75,7 @@ void automatic() //Includes operations which allow the zumo robot to run autonom
   {
     //buzzer.playNote(NOTE_B(4), 1000, 10);
     reverse(); //Upon touching a right wall the robot will reverse.
-    delay(300);
+    delay(200);
     automaticleft(); //After reversing the robot will turn right.
     delay(300);
     automaticforward(); //It will then continue to move foward.
@@ -139,24 +139,25 @@ void searchroom() //Includes operations to assist with searching a room.
   delay(500);
   hault();
 
-  while (count < 1000) //while the count is less than 1000 the robot will keep turning, the robot should complete a 420 degree turn.
+  while (count < 500) //while the count is less than 1000 the robot will keep turning, the robot should complete a 420 degree turn.
   {
     motors.setLeftSpeed(-100); //zumo robot will do a 420 degree turn and scan the room.
     motors.setRightSpeed(100);
     Detection(); //detection is ran alongside the turning.
     count++;
   }
-  if (count >= 1000) //once the count is greater than 1000, the zumo will stop, then return to the path.
+  if (count >= 500) //once the count is greater than 1000, the zumo will stop, then return to the path.
   {
     hault();
     Serial1.print("h");
     delay(300);
-    if (rightturnmade = true) //if a right turn was made upon entry, a right turn is required upon exit.
+    if (rightturnmade = true) 
     {
       forward();
       delay(500);
-      right();
-      delay(50);
+      left();
+      delay(25);
+      runautomatic = true;
       automatic();
       rightturnmade = false;
     }
@@ -164,9 +165,10 @@ void searchroom() //Includes operations to assist with searching a room.
     {
       forward();
       delay(500);
-      left();
-      delay(50);
+      right();
+      delay(25);
       automatic();
+      runautomatic = true;
       leftturnmade = false;
     }
 
@@ -234,7 +236,7 @@ void left() //manual control - zumo turns left then stops.
   delay(50);
   motors.setLeftSpeed(-100);
   motors.setRightSpeed(100);
-  delay(1570); //robot will turn for 1570 ms.
+  delay(1000); //robot will turn for 1570 ms.
   hault();
 }
 
@@ -252,7 +254,7 @@ void right() //manual control - zumo turns right then stops.
   delay(50);
   motors.setLeftSpeed(100);
   motors.setRightSpeed(-100);
-  delay(1570); //robot will turn for 1570 ms.
+  delay(1000); //robot will turn for 1570 ms.
   hault();
 
 }
