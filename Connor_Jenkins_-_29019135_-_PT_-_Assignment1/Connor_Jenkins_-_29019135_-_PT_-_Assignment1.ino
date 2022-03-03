@@ -33,14 +33,12 @@ void automatic()
 {
   linedetection.read(linesensorvalues);
 
-if(linesensorvalues[numberofsensors - 1] > QTR_THRESHOLD)//right sensor & right wall
+if(walldetected)//if both the left and right sensor has been in contact with a wall within the last 30 ms there is a wall.
 {
-  //buzzer.playNote(NOTE_B(4), 1000, 10);
-  reverse();
-  delay(300); 
-  automaticleft();
-  delay(300);
-  forward();
+  hault();  
+  Serial1.print("1");
+  delay(10);
+  
   
 }else if(linesensorvalues[0] > QTR_THRESHOLD) //left sensor & left wall
 {
@@ -51,18 +49,20 @@ if(linesensorvalues[numberofsensors - 1] > QTR_THRESHOLD)//right sensor & right 
   delay(300);
   forward();
 }
-else if(walldetected) //if both the left and right sensor has been in contact with a wall within the last 30 ms there is a wall.
+else if(linesensorvalues[numberofsensors - 1] > QTR_THRESHOLD) //right sensor & right wall 
 {
-  Serial1.println("Please select a direction then press start again");
-  goto pause;
+    //buzzer.playNote(NOTE_B(4), 1000, 10);
+  reverse();
+  delay(300); 
+  automaticleft();
+  delay(300);
+  forward();
 }
 else
 {
   forward(); //continue forward.
 }
 
-pause:
-hault();
 
 }
 
@@ -78,17 +78,24 @@ void detectwall()
     rightdetectedcountdown = millis();
   }
 
-  if(rightdetectedcountdown > 50 && leftdetectedcountdown > 50)
+  if(rightdetectedcountdown > 15 && leftdetectedcountdown > 15)
   {
     walldetected = true;
-    leftdetectedcountdown = 0;
-    rightdetectedcountdown = 0;
   }
 }
 
+void resetwall()
+{
+    walldetected = false;
+    rightdetectedcountdown = 0;
+    leftdetectedcountdown = 0;
+}
+
+
 void forward()
 {
-      Serial1.println("Moving forward");
+      Serial1.print("2");
+      delay(5);
       motors.setLeftSpeed(100);
       motors.setRightSpeed(100);
       delay(2);
@@ -96,7 +103,8 @@ void forward()
 
 void reverse()
 {
-      Serial1.println("Moving backwards");
+      Serial1.print("3");
+      delay(5);
       motors.setLeftSpeed(-100);
       motors.setRightSpeed(-100);
       delay(2);
@@ -104,7 +112,7 @@ void reverse()
 
 void left()
 {
-      Serial1.println("Turn left");
+      Serial1.print("4");
       motors.setLeftSpeed(-100);
       motors.setRightSpeed(100);
       delay(1570); //robot will turn for 1570 ms.
@@ -114,14 +122,15 @@ void left()
 
 void automaticleft()
 {
-      Serial1.println("Turn left");
+      Serial1.print("4");
       motors.setLeftSpeed(-100);
       motors.setRightSpeed(100);
 }
 
 void right()
 {
-      Serial1.println("Turn right");
+      Serial1.print("5");
+      delay(5);
       motors.setLeftSpeed(100);
       motors.setRightSpeed(-100);
       delay(1570); //robot will turn for 1570 ms.
@@ -131,13 +140,15 @@ void right()
 
 void automaticright()
 {
-      Serial1.println("Turn right");
+      Serial1.print("5");
       motors.setLeftSpeed(100);
       motors.setRightSpeed(-100);
 }
 
 void hault()
 {
+  Serial1.print("6");
+  delay(5);
  // buzzer.playNote(NOTE_C(4), 1000, 10);
   motors.setLeftSpeed(0);
   motors.setRightSpeed(0);
@@ -145,9 +156,9 @@ void hault()
   
 }
 
-void commands(int movecommand)
+void commands(int control)
 {
-    switch(movecommand) {
+    switch(control) {
       case 'f':
       forward();
       break;
@@ -163,31 +174,32 @@ void commands(int movecommand)
       case 's':
       hault();
       break;
-      case 'a':
-      if(Serial1.read() != 's' || !walldetected)
-      {
-        while(Serial1.read() != 's' || !walldetected){
-        automatic();
-        detectwall();
-      }
-      }
-      else
-      {
-        return;
-      }
-      break;
     }
+
+    if(control == 'a' && !walldetected)
+    {
+      do{
+        detectwall();
+        automatic();
+      }while(control != 's' || walldetected);
+    }
+
+    
+
 }
 
 
 void loop() {
-  
-  int incomingcommand =0; //Data incoming from serial.
+
+int control;
 
   if (Serial1.available() > 0) {
-    incomingcommand = Serial1.read();
-    commands(incomingcommand);
+    control = Serial1.read();
+    commands(control);
 }
 }
+
+ 
+
 
  
