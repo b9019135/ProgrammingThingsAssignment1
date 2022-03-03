@@ -1,0 +1,14 @@
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\bin\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.exe.config
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\bin\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.exe
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\bin\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.pdb
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.csprojAssemblyReference.cache
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins_ZumoGUI_ProgrmamingTHings.Form1.resources
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins_ZumoGUI_ProgrmamingTHings.Properties.Resources.resources
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.csproj.GenerateResource.cache
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.csproj.CoreCompileInputs.cache
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.exe
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.pdb
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\bin\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.exe.manifest
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\bin\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.application
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.exe.manifest
+E:\Programming Things\Assignment 1\GUI\ConnorJenkins-ZumoGUI-ProgrmamingTHings\obj\Debug\ConnorJenkins-ZumoGUI-ProgrmamingTHings.application
