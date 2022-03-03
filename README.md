@@ -92,5 +92,12 @@ Receiver Codes
 11 = Left turn was made.
 12 = objectwasfound.
 
+To use the ZUMO GUI follow the following Instructions.
+-Ensure the Xbee module is plugged into the host device.
+-Open the ZUMO GUI.exe.
+-Select the Com PORT with the Xbee Module, the baud rate doesn’t need changing.
+*If the Com port with the Xbee module cannot be found, re-plug the Xbee module, and restart the GUI*
+-Once the com Port has been selected, click Open. The Xbee module and your zumo should then been connected.
+You are then able to use any of the functions available on the GUI.
 
 
