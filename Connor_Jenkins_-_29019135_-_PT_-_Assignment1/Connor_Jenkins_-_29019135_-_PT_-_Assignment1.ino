@@ -3,8 +3,9 @@
 #include <PololuBuzzer.h>
 
 Zumo32U4Motors motors;
-Zumo32U4LineSensors linedetection;
+Zumo32U4LineSensors linedetection; //Used in the assistance of detecting black lines.
 Zumo32U4Buzzer buzzer;
+Zumo32U4ProximitySensors ObjectDetection; //Used in the assistance of detecting objects.
 
 #define QTR_THRESHOLD 700 // Microseconds (Change depending on lighting and surface conditions)
 
@@ -14,21 +15,36 @@ unsigned int linesensorvalues[numberofsensors];
 boolean runautomatic;
 boolean walldetected;
 
+boolean rightturnmade;
+boolean leftturnmade;
+
+unsigned long currentTime;
 unsigned long leftdetectedcountdown;
 unsigned long rightdetectedcountdown;
+
+
+boolean emptyroom;
 
 
 void setup() {
   // put your setup code here, to run once:
 
   Serial1.begin(9600);
+
+
   linedetection.initThreeSensors();
+  ObjectDetection.initThreeSensors();
+
   runautomatic = false; //controls whether or not the zumo should be ran automatically or manually. false = manual. true = automatic.
   walldetected = false;
   leftdetectedcountdown = 0;
   rightdetectedcountdown = 0;
 
+  int RoomID = 0;
+  boolean emptyroom = 0;
 
+  rightturnmade = false;
+  leftturnmade = false;
 }
 
 
@@ -89,7 +105,7 @@ void detectwall() //Manages wall detection.
     walldetected = true; //If both sensors reach a value greater than 15, a wall is detected.
   }
 
-    //if a single sensor is only hit, after 50 ms it will be reset.
+  //if a single sensor is only hit, after 50 ms it will be reset.
 
   if (leftdetectedcountdown > 50)
   {
@@ -107,6 +123,79 @@ void resetwall() //Reset wall occurs when the user tells the robot to turn upon 
   walldetected = false;
   rightdetectedcountdown = 0;
   leftdetectedcountdown = 0;
+}
+
+
+void stopforroom()
+{
+  hault();
+}
+
+void searchroom()
+{
+  int count;
+  forward();
+  delay(500);
+  hault();
+
+  while (count < 1000)
+  {
+    motors.setLeftSpeed(-100); //zumo robot will do a 420 degree turn and scan the room.
+    motors.setRightSpeed(100);
+    Detection();
+    count++;
+  }
+  if (count >= 1000)
+  {
+    hault();
+    Serial1.print("h");
+    delay(300);
+    if (rightturnmade = true)
+    {
+      forward();
+      delay(500);
+      right();
+      delay(50);
+      automatic();
+      rightturnmade = false;
+    }
+    else if (leftturnmade = true)
+    {
+      forward();
+      delay(500);
+      left();
+      delay(50);
+      automatic();
+      leftturnmade = false;
+    }
+
+  }
+}
+
+void Detection()
+{
+  int right_sensor = 0;
+  int left_sensor = 0;
+  ObjectDetection.read(); //reads the proximity sensors.
+  right_sensor = ObjectDetection.countsFrontWithRightLeds(); //Right Sensor.
+  left_sensor = ObjectDetection.countsFrontWithLeftLeds();   // Left Sensor.
+
+  int triggercount;
+
+  if(triggercount = 1) 
+  {
+    Serial1.print("o");
+  }
+  else {
+    Serial1.print("p");
+  }
+
+  
+  if (left_sensor >= 5 || right_sensor >= 5)
+  {
+    triggercount = 1;
+  }
+
 }
 
 
@@ -210,13 +299,25 @@ void commands(int control) // manages the users inputs from the GUI.
     case '7':
       resetwall();
       break;
+    case '8':
+      stopforroom();
+      break;
+    case '9':
+      searchroom();
+      break;
+    case '10':
+      rightturnmade = true;
+      break;
+    case '11':
+      leftturnmade = true;
+      break;
+
   }
 }
 
-
 void loop() {
 
-  int control;
+  int control; //contains the command sent by the user.
 
   if (Serial1.available() > 0) {
     control = Serial1.read();
