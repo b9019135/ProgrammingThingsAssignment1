@@ -15,70 +15,70 @@ unsigned int linesensorvalues[numberofsensors];
 boolean runautomatic;
 boolean walldetected;
 
-boolean rightturnmade;
-boolean leftturnmade;
+boolean rightturnmade; //To be used to store whether a left or right turn has been made upon entering a room.
+boolean leftturnmade;  //To be used to store whether a left or right turn has been made upon entering a room.
 
-unsigned long currentTime;
-unsigned long leftdetectedcountdown;
-unsigned long rightdetectedcountdown;
+boolean objectfound;  //To be used to store whether an Object has been found within a room.
 
-
-boolean emptyroom;
+unsigned long leftdetectedcountdown; //Used in the assistance of detecting walls;
+unsigned long rightdetectedcountdown; //Used in the assistance of detecting walls;
 
 
 void setup() {
-  // put your setup code here, to run once:
 
-  Serial1.begin(9600);
+  // uncomment if motors incorrect
+  //motors.flipLeftMotor(true);
+  //motors.flipRightMotor(true);
+
+  Serial1.begin(9600); //Baud rate.
 
 
-  linedetection.initThreeSensors();
-  ObjectDetection.initThreeSensors();
+  linedetection.initThreeSensors(); //Initalising line sensors.
+  ObjectDetection.initThreeSensors(); //initalising proximity Sensors.
 
   runautomatic = false; //controls whether or not the zumo should be ran automatically or manually. false = manual. true = automatic.
-  walldetected = false;
-  leftdetectedcountdown = 0;
+  walldetected = false; //Handles whether a wall has been detected.
+  leftdetectedcountdown = 0; 
   rightdetectedcountdown = 0;
 
-  int RoomID = 0;
-  boolean emptyroom = 0;
-
-  rightturnmade = false;
+  rightturnmade = false; 
   leftturnmade = false;
+
+  objectfound = true;
 }
 
 
-void automatic()
+void automatic() //Includes operations which allow the zumo robot to run autonomously.  
 {
-  linedetection.read(linesensorvalues);
+  linedetection.read(linesensorvalues); //reading in the line sensor values.
 
-  detectwall();
+  detectwall(); //Detectwall will be ran continuously.
 
   if (walldetected) //if both the left and right sensor has been in contact with a wall within the last 15 ms there is a wall.
   {
     motors.setLeftSpeed(0);
     motors.setRightSpeed(0);
-    Serial1.print("1");
+    Serial1.print("1"); //Output code 1 represents a wall has been detected.
     delay(50);
-    runautomatic = false;
+    runautomatic = false; //if a wall has been detected the automatic process will be stopped.
 
   } else if (linesensorvalues[0] > QTR_THRESHOLD) //left sensor & left wall
   {
     // buzzer.playNote(NOTE_A(4), 2000, 10);
-    reverse();
+    reverse(); //Upon touching a left wall the robot will reverse.
     delay(300);
-    automaticright();
+    automaticright(); //After reversing the robot will turn right.
     delay(300);
-    automaticforward();
+    automaticforward(); //It will then continue to move foward.
   }
   else if (linesensorvalues[numberofsensors - 1] > QTR_THRESHOLD) //right sensor & right wall
   {
     //buzzer.playNote(NOTE_B(4), 1000, 10);
-    reverse();
+    reverse(); //Upon touching a right wall the robot will reverse.
     delay(300);
-    automaticleft();
+    automaticleft(); //After reversing the robot will turn right.
     delay(300);
-    automaticforward();
+    automaticforward(); //It will then continue to move foward.
   }
   else
   {
@@ -88,19 +88,19 @@ void automatic()
 
 }
 
-void detectwall() //Manages wall detection.
+void detectwall() //Includes operations to assist with wall detection.
 {
-  if (linesensorvalues[0] > QTR_THRESHOLD)
+  if (linesensorvalues[0] > QTR_THRESHOLD) //upon hitting the QTR_Threshhold the leftdetectedcountdown is made to equal the current millis(); (Time since arduino started)
   {
-    leftdetectedcountdown = millis(); // begins a timer relating to the left sensor.
+    leftdetectedcountdown = millis(); 
   }
 
-  if (linesensorvalues[numberofsensors - 1] > QTR_THRESHOLD)
+  if (linesensorvalues[numberofsensors - 1] > QTR_THRESHOLD) //upon hitting the QTR_Threshhold the rightdetectedcountdown is made to equal the current millis(); (Time since arduino started)
   {
-    rightdetectedcountdown = millis(); // beins a timer relating to the right sensor.
+    rightdetectedcountdown = millis();
   }
 
-  if (rightdetectedcountdown > 15 && leftdetectedcountdown > 15)
+  if (rightdetectedcountdown > 15 && leftdetectedcountdown > 15) //
   {
     walldetected = true; //If both sensors reach a value greater than 15, a wall is detected.
   }
@@ -126,31 +126,32 @@ void resetwall() //Reset wall occurs when the user tells the robot to turn upon 
 }
 
 
-void stopforroom()
+void stopforroom() //Stopforroom occurs when the user tells the robot to stopforroom. The user is provided within a popup, where they can either turn left, or turn right.
 {
   hault();
 }
 
-void searchroom()
+void searchroom() //Includes operations to assist with searching a room.
 {
-  int count;
+  objectfound = false; //ensuring objectfound is false upon entering a new room.
+  int count = 0;
   forward();
   delay(500);
   hault();
 
-  while (count < 1000)
+  while (count < 1000) //while the count is less than 1000 the robot will keep turning, the robot should complete a 420 degree turn.
   {
     motors.setLeftSpeed(-100); //zumo robot will do a 420 degree turn and scan the room.
     motors.setRightSpeed(100);
-    Detection();
+    Detection(); //detection is ran alongside the turning.
     count++;
   }
-  if (count >= 1000)
+  if (count >= 1000) //once the count is greater than 1000, the zumo will stop, then return to the path.
   {
     hault();
     Serial1.print("h");
     delay(300);
-    if (rightturnmade = true)
+    if (rightturnmade = true) //if a right turn was made upon entry, a right turn is required upon exit.
     {
       forward();
       delay(500);
@@ -159,7 +160,7 @@ void searchroom()
       automatic();
       rightturnmade = false;
     }
-    else if (leftturnmade = true)
+    else if (leftturnmade = true) //if a left turn was made upon entry, a left turn is required upon exit.
     {
       forward();
       delay(500);
@@ -172,32 +173,32 @@ void searchroom()
   }
 }
 
-void Detection()
+void Detection() //Includes operations to assist with object detection.
 {
   int right_sensor = 0;
   int left_sensor = 0;
   ObjectDetection.read(); //reads the proximity sensors.
-  right_sensor = ObjectDetection.countsFrontWithRightLeds(); //Right Sensor.
-  left_sensor = ObjectDetection.countsFrontWithLeftLeds();   // Left Sensor.
+  right_sensor = ObjectDetection.countsFrontWithRightLeds(); //assigning the Right Sensor to the right_sensor variable.
+  left_sensor = ObjectDetection.countsFrontWithLeftLeds();   //assigning the left Sensor to the left_sensor variable.
 
-  int triggercount;
-
-  if(triggercount = 1) 
+  if (left_sensor >= 5 || right_sensor >= 5) //If the value read, is greater than 5, we assume an object as been detected. Else we assume no object has been detected.
   {
-    Serial1.print("o");
-  }
-  else {
-    Serial1.print("p");
-  }
-
-  
-  if (left_sensor >= 5 || right_sensor >= 5)
+    Serial1.print("o"); //Output code o represents an object has been detected.
+    objectfound = true; //if an object has been detected, object found is set as true.
+  } else
   {
-    triggercount = 1;
+    Serial1.print("p"); //Output code p represents no object has been detected.
   }
 
 }
 
+void returnback() //Includes operations to assist in the return of the zumo upon reaching the end of a T juction.
+{
+  motors.setLeftSpeed(-100);
+  motors.setRightSpeed(100);
+  delay(4000);
+  automatic();
+}
 
 void forward() //Manual control - Zumo moves forward.
 {
@@ -278,38 +279,41 @@ void hault() // Everything haults. The zumo comes to a standstill.
 void commands(int control) // manages the users inputs from the GUI.
 {
   switch (control) {
-    case 'f':
+    case 'f':  //Output code f represents forward
       forward();
       break;
-    case 'b':
+    case 'b': //Output code b represents reversing
       reverse();
       break;
-    case 'l':
+    case 'l': //Output code l represents left
       left();
       break;
-    case 'r':
+    case 'r': //Output code r represents right
       right();
       break;
-    case 's':
+    case 's': //Output code s represents stop
       hault();
       break;
-    case 'a':
+    case 'a': //Output code a represents automatic.
       runautomatic = true;
       break;
-    case '7':
+    case '7': //Output code 7  represents reset detected wall.
       resetwall();
       break;
-    case '8':
+    case '8': //Output code 8 represents stop for a room
       stopforroom();
       break;
-    case '9':
+    case '9': //Output code 9 represents search a room.
       searchroom();
       break;
-    case '10':
+    case '10': ////Output code 10 represents a rightturn being made.
       rightturnmade = true;
       break;
-    case '11':
+    case '11': //Output code 11 represents a left turn being made.
       leftturnmade = true;
+      break;
+    case 'v': //Output code v represents the returning of a zumo at a T juction.
+      returnback();
       break;
 
   }
@@ -320,11 +324,11 @@ void loop() {
   int control; //contains the command sent by the user.
 
   if (Serial1.available() > 0) {
-    control = Serial1.read();
-    commands(control);
+    control = Serial1.read(); 
+    commands(control); //The incoming command is passed into a switch.
   } else
   {
-    if (runautomatic)
+    if (runautomatic) //Upon selecting automatic within the UI, runautomatic is set to true, and the automatic process is ran.
     {
       automatic();
     }
