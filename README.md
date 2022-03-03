@@ -77,8 +77,20 @@ Youtube Link to demonstration
 
 Additional Information
 
+Receiver Codes
 
-
+1 = Wall Detected.
+2 = Forward
+3 = Reverse
+4 = Left
+5 = Right
+6 = Stopped
+7 = reset wall detected
+8 = Stop for a room
+9 = Search a room.
+10 = Right turn was made.
+11 = Left turn was made.
+12 = objectwasfound.
 
 
 
