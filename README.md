@@ -57,7 +57,7 @@ turn). The Zumo turns around and then goes to search the other half of the corri
 half of the corridor just searched, autonomously, and ignore any instructions to turn into rooms or back
 down the main corridor. These instructions must be sent though, so that the robot knows it has passed 
 
-----------------------------------------------------------------------------Overview----------------------------------------------------------------------
+Overview
 
 This Github respository includes both the GUI and the Arduino code for the Programming Things assignment : Search & rescue. Above are the required tasks to be completed. Below i have mentioned the tasks i have attempted.
 
@@ -72,10 +72,12 @@ Task 1  : Task 2 : Task 3 : Task 4 : Task 5
 Tasks Unattempted:
 Task 6 : Task 7
 
---------------------------------------------------------------Youtube Link to demonstration -------------------------------------------------------------
+Youtube Link to demonstration
 
 
---------------------------------------------------------------------Additional Information ----------------------------------------------------------------
+Additional Information
+
+
 
 
 
